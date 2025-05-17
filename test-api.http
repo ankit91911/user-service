@@ -1,0 +1,14 @@
+### Create a new user
+POST http://127.0.0.1:8001/api/users
+Content-Type: application/json
+
+{
+  "name": "Ankit Kumar",
+  "email": "ankit@example.com",
+  "role": "student"
+}
+
+###
+
+### Get all users
+GET http://127.0.0.1:8001/api/users
