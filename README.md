@@ -1,61 +1,170 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# User Service
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+This service provides API endpoints for managing users.
 
-## About Laravel
+## Technology Stack
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+* **Backend Framework:** Laravel
+* **Database:** MySQL
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Database Configuration
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+* **Database Name:** `user_service_db`
+* Ensure that your MySQL server is running and you have configured the database connection details in your Laravel `.env` file.
 
-## Learning Laravel
+## API Endpoints
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 1. Register User
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+* **Endpoint:** `POST /api/users`
+* **Description:** Registers a new user.
+* **Request Body (JSON):**
+    ```json
+    {
+        "name": "User Name",
+        "email": "user@example.com",
+        "password": "securepassword",
+        "role": "student"
+    }
+    ```
+    * `name`: (string, required) The name of the user.
+    * `email`: (string, required, unique) The email address of the user. Must be a valid email format.
+    * `password`: (string, required, min:8) The password for the user. Minimum 8 characters.
+    * `role`: (string, required) The role of the user. Allowed values: `student`, `teacher`.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+* **Response (JSON - Success):**
+    ```json
+    {
+        "id": 3,
+        "name": "User Name",
+        "email": "user@example.com",
+        "role": "student",
+        "created_at": "2025-05-18T06:30:00.000000Z",
+        "updated_at": "2025-05-18T06:30:00.000000Z"
+    }
+    ```
 
-## Laravel Sponsors
+    {
+        "message": "The email field must be a valid email address.",
+        "errors": {
+            "name": [
+                "The name field is required."
+            ],
+            "email": [
+                "The email field is required.",
+                "The email field must be a valid email address.",
+                "The email has already been taken."
+            ],
+            "password": [
+                "The password field is required.",
+                "The password must be at least 8 characters."
+            ],
+            "role": [
+                "The role field is required.",
+                "The selected role is invalid."
+            ]
+        }
+    }
+    ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 2. List Users
 
-### Premium Partners
+* **Endpoint:** `GET /api/users`
+* **Description:** Retrieves a list of all users.
+* **Request Parameters:** None
+* **Response (JSON - Success):**
+    ```json
+    [
+        {
+            "id": 1,
+            "name": "John Doe",
+            "email": "john.doe@example.com",
+            "role": "teacher",
+            "created_at": "2025-05-18T06:25:00.000000Z",
+            "updated_at": "2025-05-18T06:25:00.000000Z"
+        },
+        {
+            "id": 2,
+            "name": "Jane Smith",
+            "email": "jane.smith@example.com",
+            "role": "student",
+            "created_at": "2025-05-18T06:26:00.000000Z",
+            "updated_at": "2025-05-18T06:26:00.000000Z"
+        }
+        // ... more users
+    ]
+    ```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+## Setup Instructions
 
-## Contributing
+1.  **Clone the repository:**
+    ```bash
+    git clone <repository-url>
+    cd <repository-name>
+    ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+2.  **Install Composer dependencies:**
+    ```bash
+    composer install
+    ```
 
-## Code of Conduct
+3.  **Copy the `.env.example` file to `.env` and configure your database connection details:**
+    ```bash
+    cp .env.example .env
+    ```
+    Edit the `.env` file with your MySQL database credentials:
+    ```
+    DB_CONNECTION=mysql
+    DB_HOST=127.0.0.1
+    DB_PORT=3306
+    DB_DATABASE=user_service_db
+    DB_USERNAME=your_database_username
+    DB_PASSWORD=your_database_password
+    ```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+4.  **Generate the application key:**
+    ```bash
+    php artisan key:generate
+    ```
 
-## Security Vulnerabilities
+5.  **Run database migrations:**
+    ```bash
+    php artisan migrate
+    ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+6.  **Start the Laravel development server:**
+    ```bash
+    php artisan serve --port=8001
+    ```
+    The API will be accessible at `http://127.0.0.1:8001/api`.
 
-## License
+## Usage
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+You can use tools like Postman, Insomnia, or `curl` to interact with the API endpoints.
+
+**Example using `curl`:**
+
+* **Register a new user:**
+    ```bash
+    curl -X POST -H "Content-Type: application/json" -d '{"name": "Alice Johnson", "email": "alice.j@example.com", "password": "password123", "role": "student"}' [http://127.0.0.1:8001/api/users](http://127.0.0.1:8001/api/users)
+    ```
+
+* **List all users:**
+    ```bash
+    curl [http://127.0.0.1:8001/api/users](http://127.0.0.1:8001/api/users)
+    ```
+
+## Further Development
+
+This is a basic implementation of the User Service. Potential future enhancements could include:
+
+* **Retrieving a specific user by ID:** Implementing a `GET /api/users/{id}` endpoint.
+* **Updating user information:** Implementing a `PUT /api/users/{id}` endpoint.
+* **Deleting users:** Implementing a `DELETE /api/users/{id}` endpoint.
+* **Password hashing:** Ensuring secure storage of user passwords (Laravel's default authentication handles this).
+* **Authentication and Authorization:** Implementing login functionality and protecting endpoints based on user roles.
+* **Password reset functionality:** Allowing users to reset their passwords.
+* **Email verification:** Verifying user email addresses upon registration.
+* **Pagination for listing users:** Handling a large number of users efficiently.
+* **Filtering and searching users:** Allowing administrators to query users based on criteria.
+* **Unit and integration tests:** Ensuring the reliability of the service.
